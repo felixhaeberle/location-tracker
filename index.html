@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>This is my location</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+  <main>
+    <article>
+      <h1>Felix is in <span id="location">•</span></h1>
+      <div id="map"></div>
+      <p>Lorem ipsum dolor sit amet consectetur adipiscing, elit inceptos nunc et litora, cras class id morbi viverra.
+        Leo in hac vel sed molestie fringilla fusce orci, dis nibh pharetra quisque inceptos interdum tortor, porta
+        parturient varius magna curae feugiat vestibulum egestas, suscipit facilisi accumsan torquent aptent lobortis.
+      </p>
+    </article>
+  </main>
+
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      $.ajaxSetup({
+        cache: false
+      });
+      $.getJSON("data/data.json").then(function (json) {
+        // get latest position
+        var lastElement = json[json.length - 1];
+
+        // extract coordinates from position
+        var lat = lastElement.lat;
+        var lon = lastElement.lon;
+        var position = {
+          latitude: lat,
+          longitude: lon
+        }
+
+        // get name of coordinates
+        getAddress(lat, lon);
+
+        // get adress from google and insert it
+        function getAddress(latitude, longitude) {
+          var key = "AIzaSyDcv7waEYz5siQUcxu3Mza9_PMtyKYIR8c";
+          $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," +
+            longitude + "&key=" + key,
+            function (json) {
+              setTimeout(function () {
+                $("#location").text(json.results[8].formatted_address);
+                $("article h1").addClass("js-applied");
+              }, 2000);
+            });
+        }
+
+        return position;
+
+      }).then(function (position) {
+        displayMap(position.latitude, position.longitude);
+
+        // display google map and insert it
+        function displayMap(latitude, longitude) {
+          var location = {
+            lat: parseFloat(latitude),
+            lng: parseFloat(longitude)
+          };
+          setTimeout(function () {
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 7,
+              center: location
+            });
+          }, 2000);
+        }
+      });
+
+    });
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcv7waEYz5siQUcxu3Mza9_PMtyKYIR8c">
+  </script>
+</body>
+
+</html>
