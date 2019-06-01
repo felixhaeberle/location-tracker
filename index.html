@@ -55,7 +55,7 @@
 
         // get adress from google and insert it
         function getAddress(latitude, longitude) {
-          var key = "AIzaSyDcv7waEYz5siQUcxu3Mza9_PMtyKYIR8c";
+          var key = "";
           $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," +
             longitude + "&key=" + key,
             function (json) {
